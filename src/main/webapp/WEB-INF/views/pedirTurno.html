@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Configuración básica del documento -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedir Turno - Clínica Dental</title>
+    
+    <!-- Enlaces a hojas de estilo -->
+    <link rel="stylesheet" href="../../css/header-footer.css">
+    <link rel="stylesheet" href="../../css/pedirTurno.css">
+</head>
+<body>
+    <!-- =====================
+         ENCABEZADO DE PÁGINA
+    ===================== -->
+    <header>
+        <!-- Logo de la clínica -->
+        <div class="logo">
+            <img src="../../img/logo.png" alt="Clínica Dental Logo">
+        </div>
+
+        <!-- Menú de navegación principal -->
+        <nav>
+            <ul>
+                <li><a href="inicio.html">Inicio</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="equipo.html">Equipo</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- =====================
+         CONTENIDO PRINCIPAL
+    ===================== -->
+    <main class="container">
+        <!-- Cabecera de la página -->
+        <div class="page-header">
+            <h1>Solicitar Turno</h1>
+            <p>Complete el formulario para agendar su cita. Nos contactaremos para confirmar.</p>
+        </div>
+
+        <!-- Sección del formulario de turnos -->
+        <section id="turnos" class="form-section">
+            <div class="formulario">
+                <!-- Formulario de solicitud de turno -->
+                <form class="turno-form" id="formTurno">
+                    <!-- Campo: Nombre completo -->
+                    <div class="form-group">
+                        <label for="nombre">Nombre Completo *</label>
+                        <input type="text" id="nombre" placeholder="Ingrese su nombre completo" required>
+                    </div>
+
+                    <!-- Campo: RUT con formateo automático -->
+                    <div class="form-group">
+                        <label for="rut">RUT *</label>
+                        <input type="text" id="rut" placeholder="Ej: 12.345.678-9" required>
+                        <small class="help-text">Formato: 12.345.678-9</small>
+                    </div>
+
+                    <!-- Campo: Teléfono -->
+                    <div class="form-group">
+                        <label for="telefono">Teléfono *</label>
+                        <input type="tel" id="telefono" placeholder="+56 9 1234 5678" required>
+                    </div>
+
+                    <!-- Campo: Email -->
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" placeholder="su.email@ejemplo.com" required>
+                    </div>
+
+                    <!-- Campo: Servicio requerido -->
+                    <div class="form-group">
+                        <label for="servicio">Servicio Solicitado *</label>
+                        <select id="servicio" required>
+                            <option value="" disabled selected>Seleccione un servicio</option>
+                            <option value="odontologia-general">Odontología general</option>
+                            <option value="ortodoncia">Ortodoncia</option>
+                            <option value="implantes">Implantes dentales</option>
+                            <option value="endodoncia">Endodoncia (tratamiento de conducto)</option>
+                            <option value="periodoncia">Periodoncia (encías)</option>
+                            <option value="rehabilitacion">Rehabilitación oral</option>
+                            <option value="estetica">Estética dental (blanqueamiento, carillas)</option>
+                            <option value="protesis">Prótesis dentales</option>
+                            <option value="cirugia">Cirugía oral y maxilofacial</option>
+                            <option value="odontopediatria">Odontopediatría (niños)</option>
+                            <option value="urgencias">Urgencias dentales</option>
+                            <option value="limpieza">Limpieza dental</option>
+                            <option value="radiografias">Radiografías y diagnóstico</option>
+                        </select>
+                    </div>
+
+                    <!-- Campo: Fecha preferida -->
+                    <div class="form-group">
+                        <label for="fecha">Fecha Preferida *</label>
+                        <input type="date" id="fecha" required min="">
+                    </div>
+
+                    <!-- Campo: Horario preferido -->
+                    <div class="form-group">
+                        <label for="horario">Horario Preferido *</label>
+                        <select id="horario" required>
+                            <option value="" disabled selected>Seleccione un horario</option>
+                            <option value="mañana">Mañana (9:00 - 12:00)</option>
+                            <option value="tarde">Tarde (15:00 - 19:00)</option>
+                            <option value="sabado">Sábado (9:00 - 13:00)</option>
+                        </select>
+                    </div>
+
+                    <!-- Campo: Mensaje adicional -->
+                    <div class="form-group full-width">
+                        <label for="mensaje">Mensaje Adicional</label>
+                        <textarea id="mensaje" placeholder="Describa brevemente el motivo de su consulta o alguna información relevante..." rows="4"></textarea>
+                    </div>
+
+                    <!-- Checkbox de términos y condiciones -->
+                    <div class="form-group full-width">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="terminos" required>
+                            <span class="checkmark"></span>
+                            Acepto los&nbsp;
+                            <a href="#" class="link">términos y condiciones</a>&nbsp;y la&nbsp;
+                            <a href="#" class="link">política de privacidad</a> *
+                        </label>
+                    </div>
+
+                    <!-- Botón de envío del formulario -->
+                    <button type="submit" class="btn-submit">Solicitar Turno</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Sección de información adicional -->
+        <section class="info-section">
+            <div class="info-grid">
+                <!-- Información de contacto -->
+                <div class="info-card">
+                    <h3>📞 Contacto Rápido</h3>
+                    <p>Si prefiere, puede contactarnos directamente:</p>
+                    <p><strong>Teléfono:</strong> +56 9 1234 5678</p>
+                    <p><strong>Email:</strong> turnos@clinicadental.cl</p>
+                </div>
+                
+                <!-- Información de horarios -->
+                <div class="info-card">
+                    <h3>🕒 Horarios de Atención</h3>
+                    <p><strong>Lunes a Viernes:</strong> 9:00 - 20:00 hrs</p>
+                    <p><strong>Sábados:</strong> 9:00 - 14:00 hrs</p>
+                    <p><strong>Domingos:</strong> Cerrado</p>
+                </div>
+                
+                <!-- Información de urgencias -->
+                <div class="info-card">
+                    <h3>🚑 Urgencias Dentales</h3>
+                    <p>Para emergencias fuera de horario:</p>
+                    <p><strong>Urgencias:</strong> +56 9 8765 4321</p>
+                    <p>Atendemos emergencias las 24 horas</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- =====================
+         PIE DE PÁGINA
+    ===================== -->
+    <footer>
+        <p>&copy; 2025 Clínica Dental. Todos los derechos reservados.</p>
+        <!-- Redes sociales -->
+        <div class="redes-sociales">
+            <a href="#">Facebook</a>
+            <a href="#">Instagram</a>
+        </div>
+    </footer>
+
+    <!-- =====================
+         SCRIPTS
+    ===================== -->
+    <script src="../../js/restricciones.js"></script>
+    <script>
+        // Script para establecer fecha mínima como hoy
+        document.addEventListener('DOMContentLoaded', function() {
+            const fechaInput = document.getElementById('fecha');
+            const today = new Date().toISOString().split('T')[0];
+            fechaInput.min = today;
+        });
+    </script>
+</body>
+</html>
