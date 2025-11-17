@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.taller2.model.Comentario" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -406,7 +408,14 @@
             <li><a href="${pageContext.request.contextPath}/servicios">Servicios</a></li>
             <li><a href="${pageContext.request.contextPath}/equipo">Equipo</a></li>
             <li><a href="${pageContext.request.contextPath}/contacto">Contacto</a></li>
-            <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
+            <% if (session.getAttribute("rol") != null && "ADMIN".equals(session.getAttribute("rol"))) { %>
+                <li><a href="${pageContext.request.contextPath}/panel">Panel de Gestión</a></li>
+            <% } %>
+            <% if (session.getAttribute("usuarioId") != null) { %>
+                <li><a href="${pageContext.request.contextPath}/logout">Cerrar Sesión (<%= session.getAttribute("usuario") %>)</a></li>
+            <% } else { %>
+                <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
+            <% } %>
         </ul>
     </nav>
 </header>
@@ -496,28 +505,47 @@
     <h2>Lo que dicen nuestros pacientes</h2>
 
     <div class="testimonios-grid">
-
-        <div class="testimonio">
-            <p>"Excelente atención y resultados. Muy recomendados."</p>
-            <p>- Juan Pérez</p>
-            <p>⭐⭐⭐⭐⭐</p>
-            <p>Servicio: Ortodoncia</p>
-        </div>
-
-        <div class="testimonio">
-            <p>"Profesionales y amables. Me hicieron sentir muy cómoda."</p>
-            <p>- Rosa López</p>
-            <p>⭐⭐⭐⭐</p>
-            <p>Servicio: Blanqueamiento</p>
-        </div>
-
-        <div class="testimonio">
-            <p>"El tratamiento de implantes fue impecable."</p>
-            <p>- Luis Fernández</p>
-            <p>⭐⭐⭐⭐⭐</p>
-            <p>Servicio: Implantes Dentales</p>
-        </div>
-
+        <% 
+        List<Comentario> comentariosAprobados = (List<Comentario>) request.getAttribute("comentariosAprobados");
+        if (comentariosAprobados != null && !comentariosAprobados.isEmpty()) {
+            // Mostrar máximo 6 comentarios
+            int maxComentarios = Math.min(6, comentariosAprobados.size());
+            for (int i = 0; i < maxComentarios; i++) {
+                Comentario c = comentariosAprobados.get(i);
+        %>
+                <div class="testimonio">
+                    <p>"<%= c.getComentario() %>"</p>
+                    <p>- <%= c.getNombre() %></p>
+                    <p>
+                        <% for(int j = 0; j < c.getCalificacion(); j++) { %>⭐<% } %>
+                    </p>
+                    <p style="font-size:0.85rem;color:#888;">
+                        <%= c.getFechaCreacion() != null ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(c.getFechaCreacion()) : "" %>
+                    </p>
+                </div>
+        <% 
+            }
+        } else {
+        %>
+            <div class="testimonio">
+                <p>"Excelente atención y resultados. Muy recomendados."</p>
+                <p>- Paciente Satisfecho</p>
+                <p>⭐⭐⭐⭐⭐</p>
+                <p>Servicio: Odontología General</p>
+            </div>
+            <div class="testimonio">
+                <p>"Profesionales y amables. Me hicieron sentir muy cómodo."</p>
+                <p>- Cliente Feliz</p>
+                <p>⭐⭐⭐⭐</p>
+                <p>Servicio: Limpieza Dental</p>
+            </div>
+            <div class="testimonio">
+                <p>"El tratamiento fue impecable y sin dolor."</p>
+                <p>- Usuario Agradecido</p>
+                <p>⭐⭐⭐⭐⭐</p>
+                <p>Servicio: Implantes</p>
+            </div>
+        <% } %>
     </div>
 </section>
 

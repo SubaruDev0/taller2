@@ -275,7 +275,14 @@
             <li><a href="${pageContext.request.contextPath}/servicios" class="active">Servicios</a></li>
             <li><a href="${pageContext.request.contextPath}/equipo">Equipo</a></li>
             <li><a href="${pageContext.request.contextPath}/contacto">Contacto</a></li>
-            <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
+            <% if (session.getAttribute("rol") != null && "ADMIN".equals(session.getAttribute("rol"))) { %>
+                <li><a href="${pageContext.request.contextPath}/panel">Panel de Gestión</a></li>
+            <% } %>
+            <% if (session.getAttribute("usuarioId") != null) { %>
+                <li><a href="${pageContext.request.contextPath}/logout">Cerrar Sesión (<%= session.getAttribute("usuario") %>)</a></li>
+            <% } else { %>
+                <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
+            <% } %>
         </ul>
     </nav>
 </header>

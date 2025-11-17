@@ -25,13 +25,14 @@
         <div class="encabezado-login">
             <h2>¡Bienvenido!</h2>
         </div>
-        <form class="formulario-login" id="loginForm">
+        <form class="formulario-login" id="loginForm" method="POST" action="${pageContext.request.contextPath}/login">
+            <input type="hidden" name="tipoLogin" value="credenciales">
             <div class="grupo-entrada">
-                <input type="text" id="nombreUsuario" required>
+                <input type="text" id="nombreUsuario" name="usuario" required>
                 <label for="nombreUsuario"><i class="fas fa-user"></i> Usuario</label>
             </div>
             <div class="grupo-entrada">
-                <input type="password" id="contrasena" required>
+                <input type="password" id="contrasena" name="contrasena" required>
                 <label for="contrasena"><i class="fas fa-lock"></i> Contraseña</label>
             </div>
             <div class="opciones-login">
@@ -40,16 +41,25 @@
                     <div class="cbx"></div>
                     <span class="lbl">Recordarme</span>
                 </label>
-                <a href="#" class="olvide-contrasena">¿Olvidaste la contraseña?</a>
+                <a href="${pageContext.request.contextPath}/recuperar" class="olvide-contrasena">¿Olvidaste la contraseña?</a>
             </div>
-            <div id="mensajeError" class="mensaje-error oculto"></div>
-            <button type="submit" class="boton-acceso" data-redirect="${pageContext.request.contextPath}/inicio">Acceder</button>
-            <button type="button" class="boton-invitado" data-redirect="${pageContext.request.contextPath}/inicio">Acceder como invitado</button>
+            <div id="mensajeError" class="mensaje-error <%= request.getAttribute("error") == null ? "oculto" : "" %>">
+                <% if (request.getAttribute("error") != null) { %><%= request.getAttribute("error") %><% } %>
+            </div>
+            <div id="mensajeExito" class="<%= request.getAttribute("exito") == null ? "oculto" : "" %>" style="color:#155724;font-size:0.9rem;font-weight:bold;margin-bottom:20px;padding:10px;border:1px solid #c3e6cb;background-color:#d4edda;border-radius:5px;text-align:center;">
+                <% if (request.getAttribute("exito") != null) { %><%= request.getAttribute("exito") %><% } %>
+            </div>
+            <button type="submit" class="boton-acceso">Acceder</button>
+            <button type="button" class="boton-invitado" id="btnInvitado">Acceder como invitado</button>
+            <div style="margin-top:25px;text-align:center;font-size:1rem;">
+                <span style="color:#666;">¿No tienes cuenta?</span>
+                <a href="${pageContext.request.contextPath}/registro" style="color:var(--azul-principal);font-weight:bold;text-decoration:none;margin-left:5px;">Regístrate aquí</a>
+            </div>
         </form>
     </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded',()=>{const e=document.querySelector('.contenedor-logo'),o=document.querySelector('.pantalla-inicial'),t=document.querySelector('.contenedor-login'),n=document.getElementById('loginForm'),a=document.querySelector('.boton-invitado'),s=document.getElementById('nombreUsuario'),d=document.getElementById('contrasena'),r=document.getElementById('mensajeError'),i=e=>new Promise((o=>setTimeout(o,e))),c=()=>{const e=s.value.trim(),o=d.value.trim();return r.classList.add('oculto'),'Blas'===e&&'123'===o||(r.textContent='Usuario o contraseña incorrectos. Inténtalo de nuevo. Usuario: Blas | Contraseña: 123',r.classList.remove('oculto'),setTimeout((()=>{r.classList.add('oculto')}),4e3),s.focus(),!1)},l=e=>{const o=e.getAttribute('data-redirect');o&&(window.location.href=o)};(async()=>{try{await i(800),e.classList.add('mostrar-logo'),await i(1500),e.classList.remove('mostrar-logo'),e.classList.add('desvanecer'),await i(600),e.classList.add('ocultar-final'),o.classList.add('ocultar-fondo-blanco'),t.classList.remove('oculto'),t.classList.add('visible')}catch(e){console.error('Error durante la secuencia de animación:',e)}})(),n.addEventListener('submit',(e=>{e.preventDefault(),c()&&e.submitter&&e.submitter.hasAttribute('data-redirect')&&l(e.submitter)})),a.addEventListener('click',(()=>{r.classList.add('oculto'),l(a)})),document.querySelector('.boton-invitado').addEventListener('click',(function(){localStorage.setItem('acceso','invitado'),window.location.href=this.getAttribute('data-redirect')}))});
+document.addEventListener('DOMContentLoaded',()=>{const e=document.querySelector('.contenedor-logo'),o=document.querySelector('.pantalla-inicial'),t=document.querySelector('.contenedor-login'),n=document.getElementById('btnInvitado'),a=c=>new Promise(e=>setTimeout(e,c));(async()=>{try{await a(800),e.classList.add('mostrar-logo'),await a(1500),e.classList.remove('mostrar-logo'),e.classList.add('desvanecer'),await a(600),e.classList.add('ocultar-final'),o.classList.add('ocultar-fondo-blanco'),t.classList.remove('oculto'),t.classList.add('visible')}catch(e){console.error('Error durante la secuencia de animación:',e)}})(),n.addEventListener('click',()=>{const e=document.createElement('form');e.method='POST',e.action='${pageContext.request.contextPath}/login';const o=document.createElement('input');o.type='hidden',o.name='tipoLogin',o.value='invitado',e.appendChild(o),document.body.appendChild(e),e.submit()})});
 </script>
 </body>
 </html>
