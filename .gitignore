@@ -1,0 +1,137 @@
+# 📁 ARCHIVOS COMPILADOS Y BUILD
+target/
+build/
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# 🐘 DEPENDENCIAS Y SERVIDORES
+glassfish-6.2.5.zip
+glassfish-6.2.5.zip.1
+*.zip
+
+# 🗃️ BASE DE DATOS Y ARCHIVOS DE DATOS
+*.db
+*.sqlite
+*.sql
+database/backup/
+*.dump
+
+# 🔧 ARCHIVOS DE CONFIGURACIÓN SENSIBLES
+*.properties
+*.cfg
+*.config
+/passwords.txt
+/credentials.*
+/secrets.*
+
+# 📝 ARCHIVOS DE LOGS
+*.log
+logs/
+*.out
+*.err
+
+# 🖥️ ARCHIVOS DEL SISTEMA OPERATIVO
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# 🔍 ARCHIVOS TEMPORALES
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.bak
+*.backup
+
+# 📊 ARCHIVOS DE COBERTURA Y REPORTES
+coverage/
+*.lcov
+*.coverage
+jacoco.exec
+
+# 🛠️ ARCHIVOS DE IDEs
+
+## Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+## IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+## NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+## VS Code
+.vscode/
+*.code-workspace
+
+## Visual Studio
+*.suo
+*.user
+*.userosscache
+
+# 🧪 ARCHIVOS DE TEST
+/test-output/
+/test-results/
+/target/surefire-reports/
+
+# 📦 MAVEN
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# 🐳 DOCKER
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# 📋 ARCHIVOS ESPECÍFICOS DEL PROYECTO
+cookies.txt
+cookies2.txt
+*.cache
+*.lock
+
+# 🚀 ARCHIVOS DE DESPLIEGUE (MANTENER desplegar.sh en repo)
+# /desplegar.sh  # Comentado para incluir en el repo
+*.bat
+*.cmd
+
+# 📄 DOCUMENTACIÓN TEMPORAL
+*.backup
+*.old
+*.orig
+*.save
+
+# 🔒 ARCHIVOS ESPECÍFICOS QUE NO DEBEN SUBIRSE
+cookies.txt
+cookies2.txt
+
+# 📦 ARCHIVOS DE SERVIDOR (NO INCLUIR)
+glassfish-6.2.5/
+glassfish*/
