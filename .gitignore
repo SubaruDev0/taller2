@@ -34,7 +34,14 @@ logs/
 *.out
 *.err
 
-# 🖥️ ARCHIVOS DEL SISTEMA OPERATIVO
+# � ARCHIVOS DE RESPALDO Y TEMPORALES
+*.backup
+*.bak
+*.md.backup
+cookies*.txt
+walkthrough.md
+
+# �🖥️ ARCHIVOS DEL SISTEMA OPERATIVO
 .DS_Store
 .DS_Store?
 ._*

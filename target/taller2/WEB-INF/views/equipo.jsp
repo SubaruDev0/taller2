@@ -1,18 +1,507 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clínica Dental - Nuestro Equipo</title>
-    <style>
-        :root{--azul-principal:#0fa49c;--azul-claro:#087872;--color-secundario:#ffca1c;--fondo-claro:#f0f9f8;--fondo-tarjeta:#ffffff;--color-fuente:#333333;--color-hover:#0d8c85}*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif}header{display:flex;justify-content:space-between;align-items:center;padding:15px 40px;background:var(--azul-principal);color:#fff;height:120px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}.logo img{width:300px;height:auto}nav ul{display:flex;list-style:none;gap:25px}nav a{color:#fff;text-decoration:none;font-weight:500;font-size:16px;padding:8px 12px;border-radius:5px;transition:background-color 0.3s}nav a:hover,nav a.active{background-color:var(--color-hover)}footer{background:var(--azul-principal);color:white;text-align:center;padding:25px 20px;margin-top:auto}footer .redes-sociales{margin-top:12px;display:flex;justify-content:center;gap:18px}footer .redes-sociales a{text-decoration:none;color:#f5f7fa;font-weight:bold;transition:color 0.3s}footer .redes-sociales a:hover{color:var(--color-secundario)}body{background:var(--fondo-claro);min-height:100vh;display:flex;flex-direction:column}.page-header{text-align:center;padding:40px 20px;background:linear-gradient(135deg,var(--azul-principal) 0%,var(--azul-claro) 100%);color:white}.page-header h1{font-size:2.5rem;margin-bottom:15px}.page-header p{font-size:1.2rem;max-width:700px;margin:0 auto;line-height:1.6}main{flex:1;padding:40px 20px;max-width:1200px;margin:0 auto;width:100%}.equipo-section{margin-bottom:60px}.equipo-section h2{color:var(--azul-principal);text-align:center;margin-bottom:40px;font-size:2rem;border-bottom:3px solid var(--azul-claro);padding-bottom:10px}.equipo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:30px;margin-top:30px}.miembro-equipo{background:var(--fondo-tarjeta);border-radius:16px;padding:25px;box-shadow:0 6px 20px rgba(0,0,0,0.1);transition:transform 0.3s,box-shadow 0.3s;display:flex;flex-direction:column;align-items:center;text-align:center;border-top:4px solid var(--azul-principal)}.miembro-equipo:hover{transform:translateY(-8px);box-shadow:0 12px 30px rgba(15,164,156,0.15)}.foto-miembro{width:150px;height:150px;border-radius:50%;overflow:hidden;margin-bottom:20px;border:4px solid var(--azul-claro)}.foto-miembro img{width:100%;height:100%;object-fit:cover}.info-miembro h3{color:var(--azul-principal);margin-bottom:8px;font-size:1.4rem}.especialidad{color:var(--color-secundario);font-weight:bold;margin-bottom:5px;font-size:1.1rem}.experiencia{color:var(--azul-claro);font-style:italic;margin-bottom:12px}.descripcion{color:var(--color-fuente);line-height:1.6;margin-bottom:15px}.redes-miembro{display:flex;gap:15px;justify-content:center}.icono{font-size:1.2rem;cursor:pointer;transition:transform 0.2s}.icono:hover{transform:scale(1.2)}.apoyo-grid{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}.miembro-apoyo{background:var(--fondo-tarjeta);border-radius:12px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,0.08);transition:transform 0.3s;display:flex;flex-direction:column;align-items:center;text-align:center;border-left:4px solid var(--color-secundario)}.miembro-apoyo:hover{transform:translateY(-5px)}.miembro-apoyo .foto-miembro{width:120px;height:120px;margin-bottom:15px}.certificaciones-section{background:var(--fondo-tarjeta);border-radius:16px;padding:40px 30px;box-shadow:0 6px 20px rgba(0,0,0,0.1);margin-top:40px}.certificaciones-section h2{color:var(--azul-principal);text-align:center;margin-bottom:30px;font-size:1.8rem}.certificaciones-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px}.certificacion-item{text-align:center;padding:20px;background:var(--fondo-claro);border-radius:10px;transition:transform 0.3s}.certificacion-item:hover{transform:translateY(-5px)}.certificacion-item h3{color:var(--azul-principal);margin-bottom:10px;font-size:1.2rem}.certificacion-item p{color:var(--color-fuente);line-height:1.5}.btn-contacto{position:fixed;bottom:30px;right:30px;background-color:var(--color-secundario);color:var(--color-fuente);border:none;border-radius:50px;padding:15px 25px;font-size:16px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:background-color 0.3s,transform 0.3s;z-index:100}.btn-contacto:hover{background-color:#e5b600;transform:scale(1.05)}@media(max-width:768px){header{flex-direction:column;height:auto;padding:15px;gap:15px}.logo img{width:200px}nav ul{flex-wrap:wrap;justify-content:center;gap:10px}.page-header{padding:30px 15px}.page-header h1{font-size:2rem}.page-header p{font-size:1rem}main{padding:20px 15px}.equipo-grid{grid-template-columns:1fr;gap:20px}.apoyo-grid{grid-template-columns:1fr}.certificaciones-grid{grid-template-columns:1fr}.btn-contacto{bottom:20px;right:20px;padding:12px 20px;font-size:14px}.equipo-section h2{font-size:1.6rem}.info-miembro h3{font-size:1.2rem}}
-    </style>
-</head>
-<body>
-<header><div class="logo"><img src="${pageContext.request.contextPath}/img/logo.png" alt="Clínica Dental Logo"></div><nav><ul><li><a href="${pageContext.request.contextPath}/inicio">Inicio</a></li><li><a href="${pageContext.request.contextPath}/servicios">Servicios</a></li><li><a href="${pageContext.request.contextPath}/equipo" class="active">Equipo</a></li><li><a href="${pageContext.request.contextPath}/contacto">Contacto</a></li><% if (session.getAttribute("rol") != null && "ADMIN".equals(session.getAttribute("rol"))) { %><li><a href="${pageContext.request.contextPath}/panel">Panel de Gestión</a></li><% } %><% if (session.getAttribute("usuarioId") != null) { %><li><a href="${pageContext.request.contextPath}/logout">Cerrar Sesión (<%= session.getAttribute("usuario") %>)</a></li><% } else { %><li><a href="${pageContext.request.contextPath}/login">Login</a></li><% } %></ul></nav></header>
-<main><div class="page-header"><h1>Nuestro Equipo Profesional</h1><p>Conoce a los especialistas que cuidarán de tu salud bucal con experiencia y dedicación</p></div><section id="especialistas" class="equipo-section"><h2>Especialistas</h2><div class="equipo-grid"><div class="miembro-equipo"><div class="foto-miembro"><img src="${pageContext.request.contextPath}/img/carlos.jpg" alt="Dr. Carlos Mendoza"></div><div class="info-miembro"><h3>Dr. Carlos Mendoza</h3><p class="especialidad">Odontólogo General - Especialista en Implantología</p><p class="experiencia">15 años de experiencia</p><p class="descripcion">Especializado en implantes dentales y rehabilitación oral. Miembro de la Sociedad de Implantología Chile.</p><div class="redes-miembro"><span class="icono">📧</span><span class="icono">📱</span></div></div></div><div class="miembro-equipo"><div class="foto-miembro"><img src="${pageContext.request.contextPath}/img/dr.Lopez.png" alt="Dra. Ana López"></div><div class="info-miembro"><h3>Dra. Ana López</h3><p class="especialidad">Ortodoncista</p><p class="experiencia">12 años de experiencia</p><p class="descripcion">Especialista en ortodoncia invisible y brackets estéticos. Certificada en Invisalign.</p><div class="redes-miembro"><span class="icono">📧</span><span class="icono">📱</span></div></div></div><div class="miembro-equipo"><div class="foto-miembro"><img src="${pageContext.request.contextPath}/img/dr.roberto.jpg" alt="Dr. Roberto Silva"></div><div class="info-miembro"><h3>Dr. Roberto Silva</h3><p class="especialidad">Cirujano Maxilofacial</p><p class="experiencia">18 años de experiencia</p><p class="descripcion">Especialista en cirugías complejas, extracciones y tratamientos de ATM.</p><div class="redes-miembro"><span class="icono">📧</span><span class="icono">📱</span></div></div></div></div></section><section id="equipo-apoyo" class="equipo-section"><h2>Equipo de Apoyo</h2><div class="equipo-grid apoyo-grid"><div class="miembro-apoyo"><div class="foto-miembro"><img src="${pageContext.request.contextPath}/img/apoyo1.jpg" alt="María González"></div><div class="info-miembro"><h3>María González</h3><p class="especialidad">Higienista Dental</p><p class="experiencia">8 años de experiencia</p><p class="descripcion">Especialista en limpiezas dentales profundas y educación en higiene bucal.</p></div></div><div class="miembro-apoyo"><div class="foto-miembro"><img src="${pageContext.request.contextPath}/img/apoyo2.jpeg" alt="Pedro Martínez"></div><div class="info-miembro"><h3>Pedro Martínez</h3><p class="especialidad">Asistente Dental</p><p class="experiencia">6 años de experiencia</p><p class="descripcion">Apoyo en procedimientos y atención al paciente. Certificado en esterilización.</p></div></div><div class="miembro-apoyo"><div class="foto-miembro"><img src="${pageContext.request.contextPath}/img/apoyo3.jpg" alt="Laura Fernández"></div><div class="info-miembro"><h3>Laura Fernández</h3><p class="especialidad">Recepcionista</p><p class="experiencia">5 años de experiencia</p><p class="descripcion">Gestión de citas y atención personalizada a nuestros pacientes.</p></div></div></div></section><section id="certificaciones" class="certificaciones-section"><h2>Certificaciones y Miembros</h2><div class="certificaciones-grid"><div class="certificacion-item"><h3>✅ Colegio de Odontólogos de Chile</h3><p>Todos nuestros profesionales están certificados y activos en el colegio</p></div><div class="certificacion-item"><h3>🏥 Certificación en Bioseguridad</h3><p>Clínica certificada en protocolos de bioseguridad y esterilización</p></div><div class="certificacion-item"><h3>📊 Miembros Activos</h3><p>Formamos parte de las principales sociedades odontológicas del país</p></div></div></section></main>
-<footer><p>&copy; 2025 Clínica Dental. Todos los derechos reservados.</p><div class="redes-sociales"><a href="#">Facebook</a><a href="#">Instagram</a></div></footer>
-<button class="btn-contacto" onclick="window.location.href='${pageContext.request.contextPath}/pedirTurno'">Pedir Turno</button>
-</body>
-</html>
+    <!DOCTYPE html>
+    <html lang="es">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Clínica Dental - Nuestro Equipo</title>
+        <style>
+            :root {
+                --azul-principal: #0fa49c;
+                --azul-claro: #087872;
+                --color-secundario: #ffca1c;
+                --fondo-claro: #f0f9f8;
+                --fondo-tarjeta: #ffffff;
+                --color-fuente: #333333;
+                --color-hover: #0d8c85
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "Segoe UI", sans-serif
+            }
+
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 40px;
+                background: var(--azul-principal);
+                color: #fff;
+                height: 120px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)
+            }
+
+            .logo img {
+                width: 300px;
+                height: auto
+            }
+
+            nav ul {
+                display: flex;
+                list-style: none;
+                gap: 25px
+            }
+
+            nav a {
+                color: #fff;
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 16px;
+                padding: 8px 12px;
+                border-radius: 5px;
+                transition: background-color 0.3s
+            }
+
+            nav a:hover,
+            nav a.active {
+                background-color: var(--color-hover)
+            }
+
+            footer {
+                background: var(--azul-principal);
+                color: white;
+                text-align: center;
+                padding: 25px 20px;
+                margin-top: auto
+            }
+
+            footer .redes-sociales {
+                margin-top: 12px;
+                display: flex;
+                justify-content: center;
+                gap: 18px
+            }
+
+            footer .redes-sociales a {
+                text-decoration: none;
+                color: #f5f7fa;
+                font-weight: bold;
+                transition: color 0.3s
+            }
+
+            footer .redes-sociales a:hover {
+                color: var(--color-secundario)
+            }
+
+            body {
+                background: var(--fondo-claro);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column
+            }
+
+            .page-header {
+                text-align: center;
+                padding: 40px 20px;
+                background: linear-gradient(135deg, var(--azul-principal) 0%, var(--azul-claro) 100%);
+                color: white
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+                margin-bottom: 15px
+            }
+
+            .page-header p {
+                font-size: 1.2rem;
+                max-width: 700px;
+                margin: 0 auto;
+                line-height: 1.6
+            }
+
+            main {
+                flex: 1;
+                padding: 40px 20px;
+                max-width: 1200px;
+                margin: 0 auto;
+                width: 100%
+            }
+
+            .equipo-section {
+                margin-bottom: 60px
+            }
+
+            .equipo-section h2 {
+                color: var(--azul-principal);
+                text-align: center;
+                margin-bottom: 40px;
+                font-size: 2rem;
+                border-bottom: 3px solid var(--azul-claro);
+                padding-bottom: 10px
+            }
+
+            .equipo-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                gap: 30px;
+                margin-top: 30px
+            }
+
+            .miembro-equipo {
+                background: var(--fondo-tarjeta);
+                border-radius: 16px;
+                padding: 25px;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s, box-shadow 0.3s;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                border-top: 4px solid var(--azul-principal)
+            }
+
+            .miembro-equipo:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 30px rgba(15, 164, 156, 0.15)
+            }
+
+            .foto-miembro {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                overflow: hidden;
+                margin-bottom: 20px;
+                border: 4px solid var(--azul-claro)
+            }
+
+            .foto-miembro img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover
+            }
+
+            .info-miembro h3 {
+                color: var(--azul-principal);
+                margin-bottom: 8px;
+                font-size: 1.4rem
+            }
+
+            .especialidad {
+                color: var(--color-secundario);
+                font-weight: bold;
+                margin-bottom: 5px;
+                font-size: 1.1rem
+            }
+
+            .experiencia {
+                color: var(--azul-claro);
+                font-style: italic;
+                margin-bottom: 12px
+            }
+
+            .descripcion {
+                color: var(--color-fuente);
+                line-height: 1.6;
+                margin-bottom: 15px
+            }
+
+            .redes-miembro {
+                display: flex;
+                gap: 15px;
+                justify-content: center
+            }
+
+            .icono {
+                font-size: 1.2rem;
+                cursor: pointer;
+                transition: transform 0.2s
+            }
+
+            .icono:hover {
+                transform: scale(1.2)
+            }
+
+            .apoyo-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))
+            }
+
+            .miembro-apoyo {
+                background: var(--fondo-tarjeta);
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+                transition: transform 0.3s;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                border-left: 4px solid var(--color-secundario)
+            }
+
+            .miembro-apoyo:hover {
+                transform: translateY(-5px)
+            }
+
+            .miembro-apoyo .foto-miembro {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 15px
+            }
+
+            .certificaciones-section {
+                background: var(--fondo-tarjeta);
+                border-radius: 16px;
+                padding: 40px 30px;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+                margin-top: 40px
+            }
+
+            .certificaciones-section h2 {
+                color: var(--azul-principal);
+                text-align: center;
+                margin-bottom: 30px;
+                font-size: 1.8rem
+            }
+
+            .certificaciones-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 25px
+            }
+
+            .certificacion-item {
+                text-align: center;
+                padding: 20px;
+                background: var(--fondo-claro);
+                border-radius: 10px;
+                transition: transform 0.3s
+            }
+
+            .certificacion-item:hover {
+                transform: translateY(-5px)
+            }
+
+            .certificacion-item h3 {
+                color: var(--azul-principal);
+                margin-bottom: 10px;
+                font-size: 1.2rem
+            }
+
+            .certificacion-item p {
+                color: var(--color-fuente);
+                line-height: 1.5
+            }
+
+            .btn-contacto {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background-color: var(--color-secundario);
+                color: var(--color-fuente);
+                border: none;
+                border-radius: 50px;
+                padding: 15px 25px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                transition: background-color 0.3s, transform 0.3s;
+                z-index: 100
+            }
+
+            .btn-contacto:hover {
+                background-color: #e5b600;
+                transform: scale(1.05)
+            }
+
+            @media(max-width:768px) {
+                header {
+                    flex-direction: column;
+                    height: auto;
+                    padding: 15px;
+                    gap: 15px
+                }
+
+                .logo img {
+                    width: 200px
+                }
+
+                nav ul {
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 10px
+                }
+
+                .page-header {
+                    padding: 30px 15px
+                }
+
+                .page-header h1 {
+                    font-size: 2rem
+                }
+
+                .page-header p {
+                    font-size: 1rem
+                }
+
+                main {
+                    padding: 20px 15px
+                }
+
+                .equipo-grid {
+                    grid-template-columns: 1fr;
+                    gap: 20px
+                }
+
+                .apoyo-grid {
+                    grid-template-columns: 1fr
+                }
+
+                .certificaciones-grid {
+                    grid-template-columns: 1fr
+                }
+
+                .btn-contacto {
+                    bottom: 20px;
+                    right: 20px;
+                    padding: 12px 20px;
+                    font-size: 14px
+                }
+
+                .equipo-section h2 {
+                    font-size: 1.6rem
+                }
+
+                .info-miembro h3 {
+                    font-size: 1.2rem
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <header>
+            <div class="logo"><img src="${pageContext.request.contextPath}/img/logo.png" alt="Clínica Dental Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="${pageContext.request.contextPath}/inicio">Inicio</a></li>
+                    <li><a href="${pageContext.request.contextPath}/servicios">Servicios</a></li>
+                    <li><a href="${pageContext.request.contextPath}/equipo" class="active">Equipo</a></li>
+                    <li><a href="${pageContext.request.contextPath}/contacto">Contacto</a></li>
+                    <% if (session.getAttribute("rol") !=null && "ADMIN" .equals(session.getAttribute("rol"))) { %>
+                        <li><a href="${pageContext.request.contextPath}/panel">Panel de Gestión</a></li>
+                        <% } %>
+                            <% if (session.getAttribute("usuarioId") !=null) { %>
+                                <li><a href="${pageContext.request.contextPath}/logout">Cerrar Sesión (<%=
+                                            session.getAttribute("usuario") %>)</a></li>
+                                <% } else { %>
+                                    <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
+                                    <% } %>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <div class="page-header">
+                <h1>Nuestro Equipo Profesional</h1>
+                <p>Conoce a los especialistas que cuidarán de tu salud bucal con experiencia y dedicación</p>
+            </div>
+            <section id="especialistas" class="equipo-section">
+                <h2>Especialistas</h2>
+                <div class="equipo-grid">
+                    <div class="miembro-equipo">
+                        <div class="foto-miembro"><img src="${pageContext.request.contextPath}/img/carlos.jpg"
+                                alt="Dr. Carlos Mendoza"></div>
+                        <div class="info-miembro">
+                            <h3>Dr. Carlos Mendoza</h3>
+                            <p class="especialidad">Odontólogo General - Especialista en Implantología</p>
+                            <p class="experiencia">15 años de experiencia</p>
+                            <p class="descripcion">Especializado en implantes dentales y rehabilitación oral. Miembro de
+                                la Sociedad de Implantología Chile.</p>
+                            <div class="redes-miembro"><span class="icono">📧</span><span class="icono">📱</span></div>
+                        </div>
+                    </div>
+                    <div class="miembro-equipo">
+                        <div class="foto-miembro"><img src="${pageContext.request.contextPath}/img/dr.Lopez.png"
+                                alt="Dra. Ana López"></div>
+                        <div class="info-miembro">
+                            <h3>Dra. Ana López</h3>
+                            <p class="especialidad">Ortodoncista</p>
+                            <p class="experiencia">12 años de experiencia</p>
+                            <p class="descripcion">Especialista en ortodoncia invisible y brackets estéticos.
+                                Certificada en Invisalign.</p>
+                            <div class="redes-miembro"><span class="icono">📧</span><span class="icono">📱</span></div>
+                        </div>
+                    </div>
+                    <div class="miembro-equipo">
+                        <div class="foto-miembro"><img src="${pageContext.request.contextPath}/img/dr.roberto.jpg"
+                                alt="Dr. Roberto Silva"></div>
+                        <div class="info-miembro">
+                            <h3>Dr. Roberto Silva</h3>
+                            <p class="especialidad">Cirujano Maxilofacial</p>
+                            <p class="experiencia">18 años de experiencia</p>
+                            <p class="descripcion">Especialista en cirugías complejas, extracciones y tratamientos de
+                                ATM.</p>
+                            <div class="redes-miembro"><span class="icono">📧</span><span class="icono">📱</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="equipo-apoyo" class="equipo-section">
+                <h2>Equipo de Apoyo</h2>
+                <div class="equipo-grid apoyo-grid">
+                    <div class="miembro-apoyo">
+                        <div class="foto-miembro"><img src="${pageContext.request.contextPath}/img/apoyo1.jpg"
+                                alt="María González"></div>
+                        <div class="info-miembro">
+                            <h3>María González</h3>
+                            <p class="especialidad">Higienista Dental</p>
+                            <p class="experiencia">8 años de experiencia</p>
+                            <p class="descripcion">Especialista en limpiezas dentales profundas y educación en higiene
+                                bucal.</p>
+                        </div>
+                    </div>
+                    <div class="miembro-apoyo">
+                        <div class="foto-miembro"><img src="${pageContext.request.contextPath}/img/apoyo2.jpeg"
+                                alt="Pedro Martínez"></div>
+                        <div class="info-miembro">
+                            <h3>Pedro Martínez</h3>
+                            <p class="especialidad">Asistente Dental</p>
+                            <p class="experiencia">6 años de experiencia</p>
+                            <p class="descripcion">Apoyo en procedimientos y atención al paciente. Certificado en
+                                esterilización.</p>
+                        </div>
+                    </div>
+                    <div class="miembro-apoyo">
+                        <div class="foto-miembro"><img src="${pageContext.request.contextPath}/img/apoyo3.jpg"
+                                alt="Laura Fernández"></div>
+                        <div class="info-miembro">
+                            <h3>Laura Fernández</h3>
+                            <p class="especialidad">Recepcionista</p>
+                            <p class="experiencia">5 años de experiencia</p>
+                            <p class="descripcion">Gestión de citas y atención personalizada a nuestros pacientes.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="certificaciones" class="certificaciones-section">
+                <h2>Certificaciones y Miembros</h2>
+                <div class="certificaciones-grid">
+                    <div class="certificacion-item">
+                        <h3>✅ Colegio de Odontólogos de Chile</h3>
+                        <p>Todos nuestros profesionales están certificados y activos en el colegio</p>
+                    </div>
+                    <div class="certificacion-item">
+                        <h3>🏥 Certificación en Bioseguridad</h3>
+                        <p>Clínica certificada en protocolos de bioseguridad y esterilización</p>
+                    </div>
+                    <div class="certificacion-item">
+                        <h3>📊 Miembros Activos</h3>
+                        <p>Formamos parte de las principales sociedades odontológicas del país</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2025 Clínica Dental. Todos los derechos reservados.</p>
+            <div class="redes-sociales"><a href="#">Facebook</a><a href="#">Instagram</a></div>
+        </footer>
+        <button class="btn-contacto" onclick="window.location.href='${pageContext.request.contextPath}/pedirCita'">Pedir
+            Cita</button>
+    </body>
+
+    </html>
