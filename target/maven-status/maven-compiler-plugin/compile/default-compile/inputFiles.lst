@@ -15,6 +15,7 @@
 /home/subaru/Escritorio/Proyectos/Taller2/src/main/java/com/taller2/controller/AdminServicioServlet.java
 /home/subaru/Escritorio/Proyectos/Taller2/src/main/java/com/taller2/controller/RecuperarContrasenaServlet.java
 /home/subaru/Escritorio/Proyectos/Taller2/src/main/java/com/taller2/controller/HomeController.java
+/home/subaru/Escritorio/Proyectos/Taller2/src/main/java/com/taller2/util/RutValidator.java
 /home/subaru/Escritorio/Proyectos/Taller2/src/main/java/com/taller2/controller/ImageUploadServlet.java
 /home/subaru/Escritorio/Proyectos/Taller2/src/main/java/com/taller2/controller/RegistroServlet.java
 /home/subaru/Escritorio/Proyectos/Taller2/src/main/java/com/taller2/controller/PagesController.java

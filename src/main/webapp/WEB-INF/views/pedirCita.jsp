@@ -20,9 +20,7 @@
                     <head>
                         <meta charset="UTF-8">
                         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>Pedir Cita - Clínica Dental</title>
-                        <link rel="stylesheet"
-                            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+                        <title>Solicitar Cita - Clínica Dental</title>
                         <style>
                             :root {
                                 --azul-principal: #0fa49c;

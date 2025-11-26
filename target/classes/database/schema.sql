@@ -30,19 +30,19 @@ CREATE TABLE IF NOT EXISTS servicios (
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla de turnos/citas
-CREATE TABLE IF NOT EXISTS turnos (
+-- Tabla de citas (solicitudes de turno)
+CREATE TABLE IF NOT EXISTS citas (
     id SERIAL PRIMARY KEY,
     usuario_id INTEGER REFERENCES usuarios(id),
     servicio_id INTEGER REFERENCES servicios(id),
-    fecha_turno DATE NOT NULL,
-    hora_turno TIME NOT NULL,
+    fecha_cita DATE NOT NULL,
+    hora_cita TIME NOT NULL,
     nombre_paciente VARCHAR(100) NOT NULL,
-    rut VARCHAR(20) NOT NULL,
+    rut VARCHAR(12) NOT NULL, -- Formato: 12345678-9 (validado con algoritmo chileno)
     telefono VARCHAR(20),
     email VARCHAR(100),
     comentarios TEXT,
-    estado VARCHAR(20) DEFAULT 'PENDIENTE' CHECK (estado IN ('PENDIENTE', 'CONFIRMADO', 'CANCELADO', 'COMPLETADO')),
+    estado VARCHAR(20) DEFAULT 'PENDIENTE' CHECK (estado IN ('PENDIENTE', 'APROBADA', 'RECHAZADA', 'CONFIRMADO', 'CANCELADO', 'COMPLETADO')),
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

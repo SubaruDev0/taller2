@@ -14,9 +14,15 @@ public class CitaDAO extends BaseDAO {
                 +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+        System.out.println("===== CitaDAO.crear() INICIO =====");
+        System.out.println("SQL: " + sql);
+        
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
 
+            System.out.println("Conexión obtenida: " + (conn != null ? "OK" : "NULL"));
+            System.out.println("PreparedStatement creado: " + (stmt != null ? "OK" : "NULL"));
+            
             stmt.setObject(1, cita.getUsuarioId());
             stmt.setObject(2, cita.getServicioId());
             stmt.setDate(3, cita.getFechaCita());
@@ -28,10 +34,22 @@ public class CitaDAO extends BaseDAO {
             stmt.setString(9, cita.getComentarios());
             stmt.setString(10, cita.getEstado() != null ? cita.getEstado() : "PENDIENTE");
 
-            return stmt.executeUpdate() > 0;
+            System.out.println("Parámetros seteados en PreparedStatement");
+            System.out.println("Ejecutando INSERT...");
+            
+            int filasAfectadas = stmt.executeUpdate();
+            System.out.println("Filas afectadas: " + filasAfectadas);
+            System.out.println("===== CitaDAO.crear() FIN (éxito) =====");
+            
+            return filasAfectadas > 0;
 
         } catch (SQLException e) {
+            System.err.println("===== ERROR EN CitaDAO.crear() =====");
+            System.err.println("SQLException Message: " + e.getMessage());
+            System.err.println("SQLException SQLState: " + e.getSQLState());
+            System.err.println("SQLException ErrorCode: " + e.getErrorCode());
             e.printStackTrace();
+            System.err.println("===== FIN ERROR =====");
         }
 
         return false;

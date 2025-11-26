@@ -2,6 +2,7 @@ package com.taller2.controller;
 
 import com.taller2.dao.CitaDAO;
 import com.taller2.model.Cita;
+import com.taller2.util.RutValidator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -77,6 +78,14 @@ public class PedirCitaServlet extends HttpServlet {
                 return;
             }
 
+            // Validar formato y dígito verificador del RUT
+            if (!RutValidator.validarRut(rut)) {
+                request.setAttribute("error", "El RUT ingresado no es válido. Verifique el formato y dígito verificador.");
+                request.setAttribute("servicios", servicioDAO.obtenerActivos());
+                request.getRequestDispatcher("/WEB-INF/views/pedirCita.jsp").forward(request, response);
+                return;
+            }
+
             if (servicioIdStr == null || servicioIdStr.trim().isEmpty()) {
                 request.setAttribute("error", "Debe seleccionar un servicio");
                 request.setAttribute("servicios", servicioDAO.obtenerActivos());
@@ -94,7 +103,7 @@ public class PedirCitaServlet extends HttpServlet {
             Cita cita = new Cita();
             cita.setUsuarioId((Integer) session.getAttribute("usuarioId"));
             cita.setNombrePaciente(nombre.trim());
-            cita.setRut(rut.trim());
+            cita.setRut(RutValidator.formatearRut(rut.trim())); // Formatear RUT antes de guardar
             cita.setTelefono(telefono != null ? telefono.trim() : "");
             cita.setEmail(email != null ? email.trim() : "");
 
@@ -126,7 +135,18 @@ public class PedirCitaServlet extends HttpServlet {
             cita.setComentarios(request.getParameter("mensaje"));
             cita.setEstado("PENDIENTE");
 
+            System.out.println("=== DEBUG: Intentando crear cita ===");
+            System.out.println("Usuario ID: " + cita.getUsuarioId());
+            System.out.println("Servicio ID: " + cita.getServicioId());
+            System.out.println("Fecha: " + cita.getFechaCita());
+            System.out.println("Hora: " + cita.getHoraCita());
+            System.out.println("Nombre: " + cita.getNombrePaciente());
+            System.out.println("RUT: " + cita.getRut());
+            System.out.println("Estado: " + cita.getEstado());
+
             boolean creado = citaDAO.crear(cita);
+
+            System.out.println("Resultado creación: " + creado);
 
             if (creado) {
                 request.setAttribute("exito", "¡Cita solicitada exitosamente! Nos contactaremos pronto.");
@@ -135,6 +155,7 @@ public class PedirCitaServlet extends HttpServlet {
             }
 
         } catch (Exception e) {
+            System.err.println("=== ERROR AL PROCESAR CITA ===");
             e.printStackTrace();
             request.setAttribute("error", "Error al procesar la cita: " + e.getMessage());
         }

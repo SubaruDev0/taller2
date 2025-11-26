@@ -345,8 +345,7 @@
         <!-- =====================
      BOTÓN FLOTANTE
 ===================== -->
-        <button class="btn-contacto" onclick="window.location.href='${pageContext.request.contextPath}/pedirCita'">Pedir
-            Cita</button>
+        <button class="btn-contacto" onclick="window.location.href='${pageContext.request.contextPath}/pedirCita'">Solicitar Cita</button>
 
     </body>
 

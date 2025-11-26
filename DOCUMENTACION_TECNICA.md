@@ -153,11 +153,72 @@ Servlets que manejan las peticiones HTTP y la lógica de negocio. Estos componen
 
 - `DatabaseConnection.java`: Implementación del patrón **Singleton** para la conexión a la base de datos. Garantiza que solo exista una instancia de conexión, mejorando el rendimiento y evitando problemas de concurrencia.
 
+- `RutValidator.java`: Utilidad para validar RUT (Rol Único Tributario) chileno usando el algoritmo estándar de módulo 11. Incluye las siguientes funcionalidades:
+  - **validarRut(String rut)**: Valida formato y dígito verificador del RUT
+  - **formatearRut(String rut)**: Normaliza el formato del RUT (elimina puntos, guiones, espacios)
+  - **calcularDigitoVerificador(String rutSinDV)**: Calcula el dígito verificador usando módulo 11
+  - **esRutTesteo(String rut)**: Identifica RUTs de prueba (11111111-1, 22222222-2, 33333333-3, 44444444-4)
+  
+  **Algoritmo de validación:** El sistema multiplica cada dígito del RUT por la serie [2,3,4,5,6,7] de forma cíclica, suma los resultados, calcula el módulo 11 y determina el dígito verificador (11→0, 10→K).
+
 ---
 
 ## 4. Funcionalidades Avanzadas
 
-### 4.1. Upload de Imágenes con Drag & Drop
+### 4.1. Validación de RUT Chileno
+
+El sistema implementa validación robusta del RUT (Rol Único Tributario) chileno, un identificador único usado en Chile para personas y empresas.
+
+#### Algoritmo de Validación
+
+El RUT chileno usa el **algoritmo de módulo 11** para validar su dígito verificador:
+
+1. **Formato esperado**: `12345678-9` (8 dígitos + guión + dígito verificador)
+2. **Normalización**: Se eliminan puntos, guiones y espacios
+3. **Cálculo del dígito verificador**:
+   - Se multiplica cada dígito por la serie [2,3,4,5,6,7] de forma cíclica (de derecha a izquierda)
+   - Se suman todos los productos
+   - Se calcula el resto de dividir la suma por 11
+   - Se resta el resto de 11
+   - Casos especiales: si el resultado es 11 → 0, si es 10 → K
+
+#### Ejemplo de Validación
+
+```
+RUT: 12.345.678-5
+
+1. Normalizar: 12345678-5
+2. Separar: número=12345678, dv=5
+3. Multiplicar de derecha a izquierda:
+   8×2 + 7×3 + 6×4 + 5×5 + 4×6 + 3×7 + 2×2 + 1×3 = 139
+4. Calcular: 11 - (139 % 11) = 11 - 7 = 4
+5. Comparar: 4 ≠ 5 → RUT inválido
+
+RUT correcto sería: 12.345.678-4
+```
+
+#### RUTs de Prueba
+
+El sistema reconoce los siguientes RUTs como válidos para propósitos de testing:
+- `11111111-1`
+- `22222222-2`
+- `33333333-3`
+- `44444444-4`
+
+#### Implementación en el Código
+
+```java
+// En PedirCitaServlet.java
+String rut = request.getParameter("rut");
+if (!RutValidator.validarRut(rut)) {
+    mensajeError = "El RUT ingresado no es válido. Verifique el formato (ej: 12345678-9).";
+    request.setAttribute("mensajeError", mensajeError);
+    doGet(request, response);
+    return;
+}
+```
+
+### 4.2. Upload de Imágenes con Drag & Drop
 
 Una de las funcionalidades más destacadas del sistema es la capacidad de subir imágenes arrastrándolas directamente sobre un área designada en el panel de administración.
 
@@ -349,48 +410,61 @@ CREATE TABLE usuarios (
 
 #### Tabla: `servicios`
 ```sql
-CREATE TABLE servicios (
+CREATE TABLE IF NOT EXISTS servicios (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
-    precio DECIMAL(10, 2),
     imagen VARCHAR(255),
+    precio DECIMAL(10,2),
+    duracion_minutos INTEGER,
     activo BOOLEAN DEFAULT TRUE,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
-**Almacena**: Catálogo de tratamientos dentales con nombre, precio, imagen y estado activo/inactivo.
+**Almacena**: Catálogo de tratamientos dentales con nombre, descripción, precio, duración estimada, imagen y estado activo/inactivo.
 
 #### Tabla: `citas`
 ```sql
-CREATE TABLE citas (
+CREATE TABLE IF NOT EXISTS citas (
     id SERIAL PRIMARY KEY,
-    usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,
-    servicio_id INTEGER REFERENCES servicios(id) ON DELETE SET NULL,
-    nombre_paciente VARCHAR(100) NOT NULL,
-    rut VARCHAR(20) NOT NULL,
-    telefono VARCHAR(20),
-    email VARCHAR(100),
+    usuario_id INTEGER REFERENCES usuarios(id),
+    servicio_id INTEGER REFERENCES servicios(id),
     fecha_cita DATE NOT NULL,
     hora_cita TIME NOT NULL,
+    nombre_paciente VARCHAR(100) NOT NULL,
+    rut VARCHAR(12) NOT NULL, -- Formato: 12345678-9 (validado con algoritmo chileno)
+    telefono VARCHAR(20),
+    email VARCHAR(100),
     comentarios TEXT,
-    estado VARCHAR(20) DEFAULT 'PENDIENTE',
-    fecha_solicitud TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    estado VARCHAR(20) DEFAULT 'PENDIENTE' CHECK (estado IN ('PENDIENTE', 'APROBADA', 'RECHAZADA', 'CONFIRMADO', 'CANCELADO', 'COMPLETADO')),
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
-**Almacena**: Registro de citas con referencia a usuario y servicio, información del paciente y estado (PENDIENTE/APROBADA/RECHAZADA).
+**Almacena**: Registro de citas/solicitudes de turno con referencia a usuario y servicio, información del paciente (incluyendo RUT validado), fecha/hora deseada y estado del proceso.
+
+**Estados posibles:**
+- **PENDIENTE**: Cita solicitada, esperando revisión del administrador
+- **APROBADA**: Cita aprobada por el administrador
+- **RECHAZADA**: Cita rechazada por el administrador
+- **CONFIRMADO**: Paciente confirmó su asistencia
+- **CANCELADO**: Cita cancelada por alguna de las partes
+- **COMPLETADO**: Cita realizada exitosamente
+
+**Validación de RUT:** El sistema implementa validación de RUT chileno usando el algoritmo estándar de módulo 11. Los RUTs de prueba reconocidos son: `11111111-1`, `22222222-2`, `33333333-3`, `44444444-4`.
 
 #### Tabla: `comentarios`
 ```sql
-CREATE TABLE comentarios (
+CREATE TABLE IF NOT EXISTS comentarios (
     id SERIAL PRIMARY KEY,
-    usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,
-    texto TEXT NOT NULL,
+    usuario_id INTEGER REFERENCES usuarios(id),
+    nombre VARCHAR(100) NOT NULL,
+    comentario TEXT NOT NULL,
+    calificacion INTEGER CHECK (calificacion BETWEEN 1 AND 5),
     aprobado BOOLEAN DEFAULT FALSE,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
-**Almacena**: Opiniones de usuarios sujetas a aprobación por parte de los administradores.
+**Almacena**: Opiniones/testimonios de usuarios con calificación de 1 a 5 estrellas, sujetas a aprobación por parte de los administradores.
 
 ### Relaciones e Índices
 
@@ -655,11 +729,37 @@ if (!"ADMIN".equals(rol)) {
 
 ## 8. Notas de Desarrollo
 
-- La terminología "Turno" ha sido refactorizada a "Cita" en todo el sistema para mayor claridad y profesionalismo.
+### Cambios Recientes (Noviembre 2025)
+
+- **Refactorización de terminología**: La tabla y todos los conceptos "Turno" han sido migrados a "Cita" en todo el sistema (código, base de datos, documentación) para mayor claridad y profesionalismo.
+
+- **Implementación de validación de RUT chileno**: Se agregó la clase `RutValidator.java` con el algoritmo estándar de módulo 11 para validar RUTs chilenos. Incluye soporte para RUTs de prueba (11111111-1, 22222222-2, 33333333-3, 44444444-4).
+
+- **Actualización de estados de citas**: La tabla `citas` ahora soporta 6 estados diferentes: PENDIENTE, APROBADA, RECHAZADA, CONFIRMADO, CANCELADO, COMPLETADO. Esto permite un seguimiento más detallado del ciclo de vida de cada cita.
+
+- **Eliminación de dependencias CDN**: Se removieron todas las referencias a Cloudflare CDN (Font Awesome) para evitar dependencias externas y mejorar el rendimiento offline.
+
+- **Cambio de nomenclatura UI**: Toda la interfaz ahora usa "Solicitar Cita" en lugar de "Pedir Cita" para un lenguaje más profesional.
+
+- **Logs de depuración**: Se implementaron logs exhaustivos en `PedirCitaServlet` y `CitaDAO` para facilitar el diagnóstico de problemas de persistencia.
+
+### Características Implementadas
+
 - La gestión de servicios es totalmente dinámica, permitiendo agregar, editar y desactivar tratamientos desde el panel de administración.
 - El sistema incluye validaciones robustas en cliente y servidor para garantizar la integridad de los datos.
 - Todas las contraseñas se almacenan en formato hash para seguridad.
 - El diseño responsive garantiza funcionamiento en dispositivos móviles, tablets y escritorio.
+- Sistema de drag & drop para carga de imágenes en el panel administrativo.
+- Pre-selección automática de servicios al navegar desde la página de servicios al formulario de citas.
+
+### Base de Datos
+
+- **Motor**: PostgreSQL 15
+- **Nombre**: taller2_bd
+- **Encoding**: UTF-8
+- **Scripts disponibles**: 
+  - `src/main/resources/database/create_database.sql` (creación completa con datos iniciales)
+  - `src/main/resources/database/schema.sql` (solo esquema)
 
 ---
 
@@ -670,40 +770,126 @@ Taller2/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/taller2/
-│   │   │   ├── controller/        # Servlets (Controladores MVC)
-│   │   │   ├── dao/                # Acceso a datos
-│   │   │   ├── model/              # Entidades (POJOs)
-│   │   │   └── util/               # Utilidades (Conexión BD)
-│   │   ├── resources/database/     # Scripts SQL
+│   │   │   ├── controller/              # Servlets (Controladores MVC)
+│   │   │   │   ├── ComentarioServlet.java
+│   │   │   │   ├── HealthServlet.java
+│   │   │   │   ├── HomeController.java
+│   │   │   │   ├── LoginServlet.java
+│   │   │   │   ├── LogoutServlet.java
+│   │   │   │   ├── PagesController.java
+│   │   │   │   ├── PanelAccionServlet.java
+│   │   │   │   ├── PanelGestionServlet.java
+│   │   │   │   ├── PedirCitaServlet.java  # Gestión de solicitudes de citas
+│   │   │   │   ├── RecuperarContrasenaServlet.java
+│   │   │   │   └── RegistroServlet.java
+│   │   │   ├── dao/                     # Acceso a datos (Data Access Objects)
+│   │   │   │   ├── BaseDAO.java
+│   │   │   │   ├── CitaDAO.java         # CRUD de citas
+│   │   │   │   ├── ComentarioDAO.java
+│   │   │   │   ├── TurnoDAO.java        # (Deprecated - migrado a CitaDAO)
+│   │   │   │   └── UsuarioDAO.java
+│   │   │   ├── model/                   # Entidades (POJOs)
+│   │   │   │   ├── Cita.java            # Modelo de cita
+│   │   │   │   ├── Comentario.java
+│   │   │   │   ├── Turno.java           # (Deprecated - migrado a Cita)
+│   │   │   │   └── Usuario.java
+│   │   │   └── util/                    # Utilidades
+│   │   │       ├── DatabaseConnection.java  # Singleton para conexión BD
+│   │   │       └── RutValidator.java    # Validador de RUT chileno (Módulo 11)
+│   │   ├── resources/
+│   │   │   └── database/                # Scripts SQL
+│   │   │       ├── create_database.sql  # Creación completa con datos iniciales
+│   │   │       └── schema.sql           # Solo esquema de tablas
 │   │   └── webapp/
 │   │       ├── WEB-INF/
-│   │       │   ├── views/          # JSPs (Vistas MVC)
-│   │       │   ├── web.xml         # Descriptor de despliegue
-│   │       │   └── glassfish-web.xml
-│   │       ├── img/                # Imágenes subidas por usuarios
-│   │       └── index.jsp           # Página de entrada
-├── target/                         # Compilados (generado por Maven)
-├── pom.xml                         # Configuración Maven
-├── desplegar.sh                    # Script de despliegue
-├── DOCUMENTACION_TECNICA.md        # Este archivo
-├── ARQUITECTURA.md                 # Diagrama de arquitectura
-└── GUIA_RAPIDA.md                  # Guía de uso rápido
+│   │       │   ├── views/               # JSPs (Vistas MVC)
+│   │       │   │   ├── contacto.jsp
+│   │       │   │   ├── equipo.jsp
+│   │       │   │   ├── home.jsp
+│   │       │   │   ├── inicio.jsp
+│   │       │   │   ├── login.jsp
+│   │       │   │   ├── panel.jsp        # Panel administrativo
+│   │       │   │   ├── pedirCita.jsp    # Formulario de solicitud de citas
+│   │       │   │   ├── recuperar.jsp
+│   │       │   │   ├── registro.jsp
+│   │       │   │   └── servicios.jsp    # Catálogo de servicios
+│   │       │   ├── web.xml              # Descriptor de despliegue Jakarta EE
+│   │       │   └── glassfish-web.xml    # Configuración específica GlassFish
+│   │       ├── img/                     # Imágenes (servicios, logos)
+│   │       │   ├── Blanqueamiento.jpg
+│   │       │   ├── Endodoncia.png
+│   │       │   ├── Implantes.jpg
+│   │       │   ├── images.jpg
+│   │       │   ├── Ortodoncia.jpg
+│   │       │   └── Periodoncia.jpg
+│   │       └── index.jsp                # Página de entrada
+├── target/                              # Compilados (generado por Maven)
+│   └── taller2.war                      # Archivo desplegable
+├── pom.xml                              # Configuración Maven (dependencias, plugins)
+├── desplegar.sh                         # Script bash de despliegue automático
+├── ARQUITECTURA.md                      # Diagrama de arquitectura del sistema
+├── DOCUMENTACION_TECNICA.md             # Este archivo
+├── GUIA_RAPIDA.md                       # Guía de uso rápido para usuarios finales
+└── SISTEMA_AUTH.md                      # Documentación del sistema de autenticación
 ```
 
----
+### Archivos Clave
 
-## 10. Próximos Pasos y Mejoras Futuras
-
-- Implementar paginación en listados largos (citas, comentarios).
-- Agregar sistema de notificaciones por email (confirmación de citas).
-- Incluir calendario interactivo para selección de fechas.
-- Implementar sistema de roles más granular (recepcionista, dentista, admin).
-- Agregar reportes y estadísticas (citas por mes, servicios más solicitados).
-- Integrar sistema de pagos online.
-- Implementar API REST para integración con aplicación móvil.
+- **pom.xml**: Define dependencias (PostgreSQL JDBC, Jakarta EE, GlassFish)
+- **web.xml**: Configuración de servlets, filtros, páginas de error
+- **glassfish-web.xml**: Context root `/taller2`
+- **DatabaseConnection.java**: Patrón Singleton, URL: `jdbc:postgresql://localhost:5432/taller2_bd`
+- **RutValidator.java**: Validación de RUT con algoritmo módulo 11
 
 ---
 
-**Última actualización**: Noviembre 2025  
-**Versión del documento**: 2.0  
-**Autores**: Equipo de Desarrollo Taller2
+## Apéndice: FAQ Técnico
+
+
+### ¿Cómo funciona el patrón Singleton en DatabaseConnection?
+
+```java
+public class DatabaseConnection {
+    private static DatabaseConnection instance;
+    
+    private DatabaseConnection() {} // Constructor privado
+    
+    public static synchronized DatabaseConnection getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
+}
+```
+
+Solo puede existir una instancia de la clase, garantizando un punto único de acceso a la conexión de BD.
+
+### ¿Qué es un PreparedStatement y por qué es importante?
+
+`PreparedStatement` es una interfaz JDBC que previene inyecciones SQL al separar la estructura de la consulta de los datos:
+
+```java
+// ❌ Vulnerable a SQL Injection
+String sql = "SELECT * FROM usuarios WHERE email = '" + email + "'";
+
+// ✅ Seguro con PreparedStatement
+String sql = "SELECT * FROM usuarios WHERE email = ?";
+PreparedStatement stmt = conn.prepareStatement(sql);
+stmt.setString(1, email);
+```
+
+Los parámetros son escapados automáticamente, previniendo ataques.
+
+### ¿Cómo extender el sistema para agregar una nueva entidad?
+
+1. Crear POJO en `model/` (ej: `Pago.java`)
+2. Crear tabla en PostgreSQL
+3. Crear DAO en `dao/` extendiendo `BaseDAO`
+4. Crear servlet en `controller/` para manejar operaciones CRUD
+5. Crear JSP en `views/` para la interfaz
+6. Registrar servlet en `web.xml` si es necesario
+
+---
+
+*Este documento es una guía viva que se actualiza con cada cambio significativo en el proyecto.*

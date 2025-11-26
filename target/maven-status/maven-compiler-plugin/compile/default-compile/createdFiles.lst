@@ -12,6 +12,7 @@ com/taller2/controller/LogoutServlet.class
 com/taller2/controller/PanelGestionServlet.class
 com/taller2/model/Usuario.class
 com/taller2/controller/PanelAccionServlet.class
+com/taller2/util/RutValidator.class
 com/taller2/controller/ImageUploadServlet.class
 com/taller2/controller/RecuperarContrasenaServlet.class
 com/taller2/controller/HomeController.class

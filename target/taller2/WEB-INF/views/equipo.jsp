@@ -500,8 +500,7 @@
             <p>&copy; 2025 Clínica Dental. Todos los derechos reservados.</p>
             <div class="redes-sociales"><a href="#">Facebook</a><a href="#">Instagram</a></div>
         </footer>
-        <button class="btn-contacto" onclick="window.location.href='${pageContext.request.contextPath}/pedirCita'">Pedir
-            Cita</button>
+        <button class="btn-contacto" onclick="window.location.href='${pageContext.request.contextPath}/pedirCita'">Solicitar Cita</button>
     </body>
 
     </html>
