@@ -18,9 +18,9 @@ import java.nio.file.Paths;
         maxRequestSize = 1024 * 1024 * 50 // 50MB
 )
 public class ImageUploadServlet extends HttpServlet {
-
+    
     private static final String UPLOAD_DIR = "img";
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -29,7 +29,7 @@ public class ImageUploadServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         try {
-            // Obtener el archivo subido
+            // Obtener el archivo subido con el nombre "file"
             Part filePart = request.getPart("file");
 
             if (filePart == null) {
@@ -40,7 +40,7 @@ public class ImageUploadServlet extends HttpServlet {
 
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
 
-            // Validar extensión
+            // Validar extensión del archivo 
             String extension = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
             if (!extension.matches("\\.(jpg|jpeg|png|gif|webp)")) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
