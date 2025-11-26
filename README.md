@@ -254,4 +254,4 @@ Este proyecto demuestra:
 4. **Seguridad**: Validaciones dobles, control de acceso
 5. **Documentación completa**: Código auto-explicativo y docs detalladas
 
-¡Perfecto para demostrar competencias en desarrollo web Java EE! 🚀
+
